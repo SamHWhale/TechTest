@@ -42,8 +42,6 @@ namespace Projections.Core.Calculations
             {
                 var currentInvestment = lumpSum + (i * monthlyInvestment);
 
-
-
                 var point = new ForecastPoint(
                     time.AddMonths(i),
                     currentInvestment,
@@ -53,7 +51,6 @@ namespace Projections.Core.Calculations
 
                 narrowBounds = CalculateGrowth(narrowBounds, annualGrowth.NarrowBoundsPercentage, monthlyInvestment);
                 wideBounds = CalculateGrowth(wideBounds, annualGrowth.WideBoundsPercentage, monthlyInvestment);
-
 
                 result.DataPoints.Add(point);
             }
