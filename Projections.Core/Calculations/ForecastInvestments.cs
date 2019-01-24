@@ -51,8 +51,8 @@ namespace Projections.Core.Calculations
                     wideBounds,
                     targetValue);
 
-                narrowBounds = CalculateGrowth(narrowBounds, annualGrowth.NarrowBoundsPercentage);
-                wideBounds = CalculateGrowth(wideBounds, annualGrowth.WideBoundsPercentage);
+                narrowBounds = CalculateGrowth(narrowBounds, annualGrowth.NarrowBoundsPercentage, monthlyInvestment);
+                wideBounds = CalculateGrowth(wideBounds, annualGrowth.WideBoundsPercentage, monthlyInvestment);
 
 
                 result.DataPoints.Add(point);
@@ -61,14 +61,14 @@ namespace Projections.Core.Calculations
             return result;
         }
 
-        private BoundedValue<decimal> CalculateGrowth(BoundedValue<decimal> currentValue, BoundedValue<double> growthPercentages)
+        private BoundedValue<decimal> CalculateGrowth(BoundedValue<decimal> currentValue, BoundedValue<double> growthPercentages, decimal monthlyInvestment)
         {
             var monthlyGrowthLowerPercentage = (decimal)AdjustAnnualGrowthToMonthly(growthPercentages.Lower);
-            var monthlyGrowthLower = (1.0m + monthlyGrowthLowerPercentage / 100.0m) * currentValue.Lower;
+            var monthlyGrowthLower = (1.0m + monthlyGrowthLowerPercentage / 100.0m) * (currentValue.Lower + monthlyInvestment);
 
 
             var monthlyGrowthUpperPercentage = (decimal)AdjustAnnualGrowthToMonthly(growthPercentages.Upper);
-            var monthlyGrowthUpper = (1.0m + monthlyGrowthUpperPercentage / 100.0m) * currentValue.Upper;
+            var monthlyGrowthUpper = (1.0m + monthlyGrowthUpperPercentage / 100.0m) * (currentValue.Upper + monthlyInvestment);
 
             var result = new BoundedValue<decimal>(monthlyGrowthLower, monthlyGrowthUpper);
             return result;
